@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>FaunaFinder Failed</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/error.css') }}">
+    </head>
+    <body>
+        <div class="container">
+            <h1>Our web application could not process your request. Please search for a new animal.</h1>
+            <button class="btn" onclick='changePage("/index")'>Search A New Animal</button>
+        </div> 
+    </body>
+</html>
+
+<script>
+    function changePage(page) {
+        window.location.href = `${page}`;
+    }
+</script>
