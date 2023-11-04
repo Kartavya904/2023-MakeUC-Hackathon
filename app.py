@@ -18,6 +18,10 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@app.route('/process_image', methods=['POST', 'GET'])
+def process_image():
+    return render_template('results.html')
+
 
 # Define Functions From Here:
 def wiki(query):
