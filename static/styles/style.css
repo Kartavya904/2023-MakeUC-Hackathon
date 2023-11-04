@@ -1,6 +1,10 @@
 body{
     font-family: 'Arial', sans-serif;
-    background: url("../images/background.jpg") no-repeat center center fixed;
+    background: url("../images/background.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
     text-align: center;
 }
 #header{
