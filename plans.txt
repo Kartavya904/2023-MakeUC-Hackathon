@@ -3,4 +3,14 @@ Idea 1:Input a picture of an animal and it tells what animal it is. Might Requir
 Idea 2: Input the name of an animal and it finds a picture of that animal.
 Idea 3: You can input either an animal picture or a text of an animal and we want an entire description of the animal. And More...
 
+Expectations: 
+Finalized: 3rd Idea
+1. Web application for uploading a picture or a text entry with an enter/submit form button.
+2. This should redirect us to a page that should generate the information of the animal, and potentially it's breed.
+3. Find a database containing animals.
+4. The main file should be trained by the database of the animals and the breeds, which would generate the name of the animal and the breed.
+5. Try using Wikipedia API to get the information of the animal/breed.
 
+Plans:
+Kartavya: Create the front-end of the web application and create a generic back-end
+Shivam: Create a generic use of wikipedia API, and work on front-end of the web application
