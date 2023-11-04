@@ -1,31 +1,88 @@
- <!-- 
-Frontend for the Web Application
-Made by Shivam Kharangate & Kartavya Singh
-Date: 11/4/2023 
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width= device-width, initial-scale=1.0">
-    <title>Animal And Breed Finder</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/index.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaunaFinder: AI Animal and Dog Breed Detector</title>
 </head>
 <body>
-    <h1 id="header">Animal and Breed Finder</h1>
-    <label for="file-upload" id="image-label">Upload Image</label>
-    <input type="file" id="file-upload" accept="image/*">
-
-    <div id="file-name"></div>
-
-    <div id="form-container">
-        <!-- Add an img element to display the uploaded image -->
-        <img src="" id="uploaded-image" alt="Uploaded Image">
-        <input type="text" id="text-input" placeholder="Enter text">
-        <button id="submit-button" onclick="submitForm()">Generate</button>
-
-    </div>
-
-
+    <h1 id="header"><span id="black-letter">F</span>auna<span id="black-letter">F</span>inder</h1>
+    <p class="title"> <br>AI Animal and Dog Breed Detector</p>
+    
+    <form action="/process_image" method="post" enctype="multipart/form-data">
+        <div id="form-container">
+            <label for="file-upload" id="image-label" class="btn">Upload Image</label>
+            <input type="file" id="file-upload" accept="image/*" name="image">
+            <div id="file-name"></div><br><br>
+            <img src="" id="uploaded-image" alt="Uploaded Image">
+            <input type="text" id="text-input" placeholder="Enter text">
+            <input type="submit" value="Process Image" id="submit-button" class="btn" onclick="submitForm()"> 
+        </div>
+    </form>
+<!--     
+    <form action="/process_image" method="post" enctype="multipart/form-data">
+        <input type="file" name="image">
+        <input type="submit" value="Process Image">
+    </form> -->
 </body>
 </html>
+
+<script>
+    const fileUpload = document.getElementById('file-upload');
+    const textInput = document.getElementById('text-input');
+    const submitButton = document.getElementById('submit-button');
+    const fileNameDisplay = document.getElementById('file-name');
+    const uploadedImage = document.getElementById('uploaded-image');
+
+    function submitForm() {
+        // Check if either an image is uploaded or text is provided
+        if (fileUpload.files.length > 0) {
+            const file = fileUpload.files[0];
+            const reader = new FileReader();
+            reader.onload = function() {
+                const fileData = reader.result;
+                // Show the uploaded image
+                uploadedImage.src = fileData;
+                uploadedImage.style.display = 'block';
+                // Redirect to a new page and pass the image data as a parameter
+                console.log(fileData);
+                //window.location.href = `result.html?imageData=${encodeURIComponent(fileData)}`;
+            };
+            reader.readAsDataURL(file);
+        } else if (textInput.value.trim() !== '') {
+            // Redirect to a new page and pass the text as a parameter
+            const textData = encodeURIComponent(textInput.value.trim());
+            window.location.href = `result.html?textData=${textData}`;
+        } else {
+            alert('Please upload an image or enter text.');
+        }
+    }
+
+    // Enable the submit button when either input changes
+    fileUpload.addEventListener('change', updateSubmitButton);
+    textInput.addEventListener('input', updateSubmitButton);
+
+    function updateSubmitButton() {
+        if (fileUpload.files.length > 0 || textInput.value.trim() !== '') {
+            submitButton.style.display = 'block';
+            if (fileUpload.files.length > 0) {
+                const fileName = fileUpload.files[0].name;
+                fileNameDisplay.innerHTML = `File Name: ${fileName} <span class="cancel-button" onclick="cancelFileUpload()">X</span>`;
+            } else {
+                fileNameDisplay.textContent = '';
+            }
+        } else {
+            submitButton.style.display = 'none';
+            fileNameDisplay.textContent = '';
+        }
+    }
+
+    // Function to cancel file upload and clear the file input
+    function cancelFileUpload() {
+        fileUpload.value = ''; // Clear the file input
+        fileNameDisplay.textContent = ''; // Clear the file name display
+        submitButton.style.display = 'none'; // Hide the submit button
+        uploadedImage.style.display = 'none'; // Hide the uploaded image
+    }
+</script>
