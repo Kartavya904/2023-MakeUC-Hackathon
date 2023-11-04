@@ -18,3 +18,40 @@ body{
     margin-top: 20px;
     display: inline-block;
 }
+#form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#text-input {
+    margin-top: 20px;
+}
+
+#submit-button {
+    margin-top: 10px;
+    display: none;
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#file-name {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.cancel-button {
+    color: #ff0000;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+/* Style for displaying the uploaded image */
+#uploaded-image {
+    max-width: 100%;
+    margin-top: 20px;
+    display: none;
+}
