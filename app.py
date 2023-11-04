@@ -42,8 +42,13 @@ def process_image():
         uploaded_text = request.form['animal']
         print(uploaded_text)
         data = wiki(uploaded_text)
-        return render_template('results.html', data=data)
-
+        api_url = 'https://api.api-ninjas.com/v1/animals?name={}'.format(uploaded_text)
+        response = requests.get(api_url, headers={'X-Api-Key': 'ig9ASDgHx/G7qjaEMjc20w==IKOpR2YWR7NvUA1w'})
+        if response.status_code == requests.codes.ok:
+            return render_template('results.html', data=data, animal_data = response.json()[0])
+            print(response.text)
+        else:
+            print("Error:", response.status_code, response.text)
 
 # Define Functions From Here
 def wiki(query):
