@@ -1,3 +1,13 @@
+body{
+    background-color: #000000;
+    color: #FFFFFF;
+    background: url("../images/background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    align-content: center;
+    padding: 10%;
+}
 .btn{
     display: inline-block;
     margin: auto;
@@ -12,4 +22,7 @@
 }
 .btn:hover{
     background: #16e0ff;
+}
+.container{
+    text-align: center;
 }
