@@ -1,0 +1,6 @@
+Rough Plan: 
+Idea 1:Input a picture of an animal and it tells what animal it is. Might Require a database for training.
+Idea 2: Input the name of an animal and it finds a picture of that animal.
+Idea 3: You can input either an animal picture or a text of an animal and we want an entire description of the animal. And More...
+
+
