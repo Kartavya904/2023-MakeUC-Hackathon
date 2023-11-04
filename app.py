@@ -18,5 +18,20 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+
+# Define Functions From Here:
+def wiki(query):
+    wiki_wiki = wiki.Wikipedia(user_agent='MakeUCHackathon')
+    page = wiki_wiki.page(query)
+    if page.exists():
+        return page.summary
+    else:
+        return ""
+
+def page_exists(query):
+    wiki_wiki = wiki.Wikipedia(user_agent='MakeUCHackathon')
+    page = wiki_wiki.page(query)
+    return page.exists()
+
 if __name__ == '__main__':
     app.run(debug=True)
