@@ -12,7 +12,7 @@
 
 # Importing the required packages
 import os, random, string, json, requests, datetime, time, re
-import wikipediaapi as wiki
+import wikipediaapi
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 # Import the Google Cloud client library
 from google.cloud import vision_v1
@@ -38,16 +38,16 @@ def process_image():
         image = Image(content=content)
         response = client.label_detection(image=image) # Taking most time to process
 
-    elif request.form['text']:
-        uploaded_text = request.form['text']
+    elif request.form['animal']:
+        uploaded_text = request.form['animal']
         print(uploaded_text)
         data = wiki(uploaded_text)
-    return render_template('results.html', data=data)
+        return render_template('results.html', data=data)
 
 
 # Define Functions From Here
 def wiki(query):
-    wiki_wiki = wiki.Wikipedia(user_agent='MakeUCHackathon')
+    wiki_wiki = wikipediaapi.Wikipedia(user_agent='MakeUCHackathon')
     page = wiki_wiki.page(query)
     if page.exists():
         return page.summary
@@ -55,7 +55,7 @@ def wiki(query):
         return ""
 
 def page_exists(query):
-    wiki_wiki = wiki.Wikipedia(user_agent='MakeUCHackathon')
+    wiki_wiki = wikipediaapi.Wikipedia(user_agent='MakeUCHackathon')
     page = wiki_wiki.page(query)
     return page.exists()
 
