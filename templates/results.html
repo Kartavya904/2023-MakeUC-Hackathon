@@ -1,12 +1,59 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Results</title>
-  </head>
-  <body>
-    <h1>This is a Heading</h1>
-    <p>This is a paragraph.</p>
-    <p>{{ data }}</p>
-    <p>{{ animal_data }}</p>
-  </body>
+</head>
+<body>
+    <h1>Results</h1>
+
+    <!-- Display the mode -->
+    {% if mode == "1" %}
+        <p>Mode: Image Processing</p>
+    {% elif mode == "2" %}
+        <p>Mode: Text Processing</p>
+    {% endif %}
+
+    <!-- Display image if in image processing mode -->
+    {% if mode == "1" %}
+        <img src="{{ uploaded_images }}" alt="Uploaded Image">
+    {% endif %}
+
+    <!-- Display Wikipedia link if available -->
+    {% if wiki_url %}
+        <p>Wikipedia Link: <a href="{{ wiki_url }}" target="_blank">{{ wiki_url }}</a></p>
+    {% endif %}
+
+    <!-- Display animal data if available -->
+    {% if labels %}
+        <h2>Animal Data</h2>
+        <p>Name: {{ labels['name'] }}</p>
+        <p>Common Name: {{ labels['commonName'] }}</p>
+        <!-- Add more attributes here as needed -->
+    {% endif %}
+
+    <!-- Display animal and genus data if available -->
+    {% if animal_data %}
+        <h2>Animal Data from Wikipedia</h2>
+        <p>{{ animal_data }}</p>
+    {% endif %}
+
+    {% if genus_data %}
+        <h2>Genus Data from Wikipedia</h2>
+        <p>{{ genus_data }}</p>
+    {% endif %}
+
+    <h2 style="text-align: center;">Characteristics</h2>
+          <div class="characteristics">
+              <table class="characteristics">
+                  <ul>
+                      {% for key, value in labels.characteristics.items() %}
+                          <tr>
+                              <td><strong>{{ key.replace('_', ' ').title() }}:</strong></td>
+                              <td>{{ value }}</td>
+                          </tr>
+                      {% endfor %}
+                  </ul>
+              </table>
+          </div>
+</body>
 </html>
