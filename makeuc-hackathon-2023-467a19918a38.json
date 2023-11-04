@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "makeuc-hackathon-2023",
+  "private_key_id": "467a19918a38e81218a773605beb0feea42c082a",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC5y7OqZj6vEk03\nSXNc3j43uscjWxE7VplDct+1olFinN0KBhyYuGTeEZ76fO8JkNhcMkilHfaY6m48\nBcpHzxfhU/bh1mex7MXotu9Bb+VLvz679NvUar2rjXHI0WQvJ0hf7uXqQLtAnu/W\n/sFGZ0jLRkW9wvAizEjaV/1RsQPc1z5PbElX/QTrxRMvqnr2Aw5mBOJhSb8XbmJV\nDcVI21eAT/8189GiIW5J2yuyZEeLThhvw5cFymXTYBmQenBISyG7nPSH7nQp9kYd\nMtN1F2DFLpUDHFUMQgAOULkdBQFZVr+karGo2RfeWplcOuvPj64D1IgnbtDFa5BL\nIsm9dARZAgMBAAECggEAEQDZ7YwtTDaRREm5QFrPq3T9+LfcWo30OWGzCuHfr3X3\nBEEgu9jgOxlP72rTy3aeJMd7S3uNaY6Tmqc8mf7Gl801Dyz6hD3mTNDB3ti5NAnw\nDIgXpP4RydHutsSm9dCTOI7AXtEgWFHs712U9you1ZLJGvLTD2dnrjr9CJotGTg3\nMLAAbnvMmVOKHSp6XAG5vdU26zkKw0LwtKO+WC9wYykKJJCbCnTSwbf3Y+hcI/Nh\nVoarx2380Uwcm5RGo1CNIYWRndtWtsZ3k/GeyZS51FaVmLrzZ5mU/1F8OFCBGMtk\nZJSVt36P0LIaxbf4E6bbdGey47mcVrvEDiSn3n+Q4wKBgQD/qKlqnGutFKl8Byme\nTGoZCoYf7rUcEo24WIL6YxgyWLsbzl8RsA4hxjguTW9QFjNCGywQElb9Xv3fc+tI\n2X9ufa9/hwOOozGMRVmMT27MX9tLpCMVXAdILZnC1EIrQO/dP0tyOP3qye6k6gMA\n2HUe8knEk3bIE4yMFshX25MNLwKBgQC6CyxizZqyGvE4uMbQaKoZDhQcCrwGepjl\n7nAFv2Us44kAPbcpHStxsZAIrk0gWgI+ZmG99xFHGTYkzOEUQF6tXq/SNITcGw8D\ndC8XP4czezMmKUAw1SEhQgYyeuiIkffH7a3Hg/2bq0aF8W3dd83vG2DR0OhNc3W3\nxqCobLd09wKBgE6+yn/18gx7osB7DEyfyMYxwaIwSkR9Sn2PdbhdsWRAhFFKPWob\nSh8JCODqJPEMBXnFGMtSeszL53JeKAhmRaPovpePJH9YsLg93BkllkEI/WjNA6le\nkTegJA4ohsD/3WHOTxS9jSg2TnUpRweJpHmFs0cDDMEPlGjJ06eMED0tAoGAXclw\nMMbRa2PlouCTaVC6HzNXs+M9ck6vcYpH8r3PtVdnIzX5dcJ8ui33HEkyHFMDuo1G\nTMuWbC8relXGSb1BfUi0fdV3/LWvVeBmNOQTtkIvQNeewn9O2kM8eIo5W0+qh6Er\n7958JNOtE6zn47OXnyhAIMWdth20hFafewiDW3UCgYAapmj3GptkTPz0/PH/+IBP\nycOFFTex0Mbs5JR0QgnSm/V5Oy0bTGy9CmyL+20uYjKwdIeTdHTWAT3xuOQ23cYb\nWF5qrbXBCjtNcMFBCpIqB9i6wH11cRVRAKbwmm2uwmMjSOU6XxwwvSJ0NI4DkQZQ\nNh45/d9V2BqK7EcF1beAuw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "makeuc-hackathon-2023@makeuc-hackathon-2023.iam.gserviceaccount.com",
+  "client_id": "108405932123913534498",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/makeuc-hackathon-2023%40makeuc-hackathon-2023.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
