@@ -1,37 +1,54 @@
-body{
-    font-family: 'Arial', sans-serif;
+body {
+    font-family: Arial, sans-serif;
     text-align: center;
+    background: url("../images/background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    overflow-y: hidden;
 }
-#header{
+.title {
+    text-align: center;
     font-size: 24px;
-    margin-top: 50px;
+    color: #0e0e0e; /* Change the color to your preference */
+    font-family: Arial, sans-serif; /* Change the font-family if needed */
+    margin-top: 10px; /* Adjust the spacing as desired */
 }
-#file-upload{
+#header {
+    font-size: 48px;
+    margin-top: 50px;
+    color: #0a0a0a;
+}
+
+
+#file-upload {
     display: none;
 }
-#image-label{
-    cursor: pointer;
-    background-color: #007BFF;
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 5px;
-    margin-top: 20px;
-    display: inline-block;
-}
+
 #form-container {
     display: flex;
     flex-direction: column;
     align-items: center;
+    align-content: center;
 }
-
+#black-letter {
+    color: #16eeee;
+}
 #text-input {
-    margin-top: 20px;
+    width: 20%;
+    border: 0;
+    outline: none;
+    background: #262626;
+    padding: 15px;
+    margin: 15px 0;
+    color: #fff;
+    font-size: 18px;
+    border-radius: 6px;
 }
 
 #submit-button {
     margin-top: 10px;
     display: none;
-    background-color: #007BFF;
     color: #fff;
     padding: 10px 20px;
     border-radius: 5px;
@@ -48,10 +65,26 @@ body{
     cursor: pointer;
     margin-left: 10px;
 }
-
+.btn{
+    display: inline-block;
+    margin: 95px auto;
+    width: fit-content;
+    border: 1px solid #0aaac2;
+    padding: 14px 50px;
+    border-radius: 6px;
+    text-decoration: none;
+    background: #000000;
+    color: #fff;
+    transition: background 0.5s;
+}
+.btn:hover{
+    background: #16e0ff;
+}
 /* Style for displaying the uploaded image */
 #uploaded-image {
-    max-width: 100%;
-    margin-top: 20px;
+    max-width: 500px;
+    align-items: center;
+    align-content: center;
+    margin-top: 20px auto;
     display: none;
 }
