@@ -1,60 +1,128 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Results</title>
+    <title>FaunaFinder Results</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/results.css') }}">
 </head>
 <body>
-    <h1>Results</h1>
+    <div class="top">
+        <a class="name" href = "{{ wiki_url }}" target="_blank"><strong>{{ labels.name }}</strong></a>
+    </div>
+    <div class="container">
+        <div class="left-section">
+            <h2>Information</h2>
+            <strong><p style="text-align: justify;">
+                {{ animal_data }}
+                <br><br>
+                {{ genus_data }}
+            </p></strong>
 
-    <!-- Display the mode -->
-    {% if mode == "1" %}
-        <p>Mode: Image Processing</p>
-    {% elif mode == "2" %}
-        <p>Mode: Text Processing</p>
-    {% endif %}
+            <h2 style="text-align: center;">Characteristics</h2>
+            <div class="characteristics">
+                <table class="characteristics">
+                    <ul>
+                        {% for key, value in labels.characteristics.items() %}
+                            <tr>
+                                <td><strong>{{ key.replace('_', ' ').title() }}:</strong></td>
+                                <td>{{ value }}</td>
+                            </tr>
+                        {% endfor %}
+                    </ul>
+                </table>
+            </div>
+        </div>
+        <div class="right-section">
+            <button class="btn" onclick='changePage("/index")'>Search A New Animal</button>
+            <img class="uploadedImage" src="{{ uploaded_image }}" alt="Image">
 
-    <!-- Display image if in image processing mode -->
-    {% if mode == "1" %}
-        <img src="{{ uploaded_images }}" alt="Uploaded Image">
-    {% endif %}
-
-    <!-- Display Wikipedia link if available -->
-    {% if wiki_url %}
-        <p>Wikipedia Link: <a href="{{ wiki_url }}" target="_blank">{{ wiki_url }}</a></p>
-    {% endif %}
-
-    <!-- Display animal data if available -->
-    {% if labels %}
-        <h2>Animal Data</h2>
-        <p>Name: {{ labels['name'] }}</p>
-        <p>Common Name: {{ labels['commonName'] }}</p>
-        <!-- Add more attributes here as needed -->
-    {% endif %}
-
-    <!-- Display animal and genus data if available -->
-    {% if animal_data %}
-        <h2>Animal Data from Wikipedia</h2>
-        <p>{{ animal_data }}</p>
-    {% endif %}
-
-    {% if genus_data %}
-        <h2>Genus Data from Wikipedia</h2>
-        <p>{{ genus_data }}</p>
-    {% endif %}
-
-    <h2 style="text-align: center;">Characteristics</h2>
-          <div class="characteristics">
-              <table class="characteristics">
-                  <ul>
-                      {% for key, value in labels.characteristics.items() %}
-                          <tr>
-                              <td><strong>{{ key.replace('_', ' ').title() }}:</strong></td>
-                              <td>{{ value }}</td>
-                          </tr>
-                      {% endfor %}
-                  </ul>
-              </table>
-          </div>
+            <h2 style="text-align: center;">Scientific Classification</h2>
+            <div class="classification">
+                <table class="classification">
+                    <ul>
+                        <tr>
+                            <td><strong>Kingdom:</strong></td>
+                            <td>{{ labels.taxonomy.kingdom }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Phylum:</strong></td>
+                            <td>{{ labels.taxonomy.phylum }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Class:</strong></td>
+                            <td>{{ labels.taxonomy.class }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Order:</strong></td>
+                            <td>{{ labels.taxonomy.order }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Family:</strong></td>
+                            <td>{{ labels.taxonomy.family }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Genus:</strong></td>
+                            <td>{{ labels.taxonomy.genus }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Species:</strong></td>
+                            <td>{{ labels.taxonomy.scientific_name }}</td>
+                        </tr>
+                    </ul>
+                </table>
+            </div>
+            <h2 style="text-align: center;">Locations</h2>
+            <table>
+                <ul>
+                    {% for location in labels.locations %}
+                        <li>{{ location }}</li>
+                    {% endfor %}
+                </ul>
+            </table>
+            <div class="similarBreeds">
+                <h2>Similar Breeds</h2>
+                <table class="similarBreeds">
+                    <tr>
+                        {% for breed in labels.similar_breeds %}
+                            <td>
+                                <img src="{{ breed.image }}" alt="Image">
+                                <p>{{ breed.name }}</p>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
+
+<script>
+    function changePage(page) {
+        window.location.href = `${page}`;
+    }
+
+    if ("{{ mode }}" == 1) { 
+        const storedImage = localStorage.getItem('uploadedImageData');
+        if (storedImage) {
+            // Find the image element with the class 'uploadedImage' and set its src attribute
+            const uploadedImage = document.querySelector('.uploadedImage');
+            if (uploadedImage) {
+                uploadedImage.src = storedImage;
+            }
+        }
+    }
+    else if ("{{ mode }}" == 2) {
+        const textData = decodeURIComponent("{{ labels.name }}");
+
+        // Fetch image from Unsplash API
+        fetch(`https://api.unsplash.com/search/photos?query="${textData}"&client_id=BxwX4irH_sxS33ZGXT9ZFCuYP4O0BCbK_KMCyKGVdUo`)
+            .then(response => response.json())
+            .then(data => {
+                const uploadedImage = document.querySelector('.uploadedImage');
+                if (uploadedImage && data.results.length > 0) {
+                    uploadedImage.src = data.results[0].urls.small;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
