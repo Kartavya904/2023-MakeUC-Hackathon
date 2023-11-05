@@ -25,6 +25,7 @@ Date: 11/4/2023
                     <img src="" id="uploaded-image" alt="Uploaded Image">
                     <input type="text" id="text-input" name="animal" placeholder="Enter A Name Of An Animal">
                     <input type="submit" value="Process Image" id="submit-button" class="btn" onclick="submitForm()"> 
+                    <input type="button" id="random-animal-button" value="Search Random Animal" class="btn" onclick='changePage("/random")'>
                 </div>
             </form>
         </div>
@@ -38,6 +39,11 @@ Date: 11/4/2023
     const submitButton = document.getElementById('submit-button');
     const fileNameDisplay = document.getElementById('file-name');
     const uploadedImage = document.getElementById('uploaded-image');
+    const randomAnimalButton = document.getElementById('random-animal-button');
+
+    function changePage(page) {
+        window.location.href = `${page}`;
+    }
 
     function submitForm() {
         // Check if either an image is uploaded or text is provided
@@ -68,6 +74,19 @@ Date: 11/4/2023
     fileUpload.addEventListener('change', updateSubmitButton);
     textInput.addEventListener('input', updateSubmitButton);
 
+    // Add this function to control the visibility of the "Search Random Animal" button
+    function updateRandomAnimalButtonVisibility() {
+        if (fileUpload.files.length === 0 && textInput.value.trim() === '') {
+            randomAnimalButton.style.display = 'block';
+        } else {
+            randomAnimalButton.style.display = 'none';
+        }
+    }
+
+    // Call the visibility function in the change event listeners for fileUpload and textInput
+    fileUpload.addEventListener('change', updateRandomAnimalButtonVisibility);
+    textInput.addEventListener('input', updateRandomAnimalButtonVisibility);
+
     function updateSubmitButton() {
         if (fileUpload.files.length > 0 || (textInput.value.trim() !== '' && textInput.value.length > 2)) {
             submitButton.style.display = 'block';
@@ -87,6 +106,7 @@ Date: 11/4/2023
 
     // Function to cancel file upload and clear the file input
     function cancelFileUpload() {
+        randomAnimalButton.style.display = 'block'; // Show the "Search Random Animal" button
         fileUpload.value = ''; // Clear the file input
         fileNameDisplay.textContent = ''; // Clear the file name display
         submitButton.style.display = 'none'; // Hide the submit button
