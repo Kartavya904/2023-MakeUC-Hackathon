@@ -13,14 +13,12 @@
 # Importing the required packages
 import os, random, string, json, requests, datetime, time, re
 import wikipediaapi
-import openai 
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 # Import the Google Cloud client library
 from google.cloud import vision_v1
 from google.cloud.vision_v1 import types, ImageAnnotatorClient, Image
 
 app = Flask(__name__)
-openai.api_key = "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"
 
 @app.route('/')
 @app.route('/index')
@@ -51,45 +49,43 @@ def process_image():
                 response = client.label_detection(image=image) # Taking most time to process
                 score = 0
                 # Collect all detected labels
-                
+                print("Labels: ")
                 for label in response.label_annotations:
                     if is_animal(label.description):
+                        print("Labels: ")
                         labelslist.append(label.description) 
                         score = round(label.score, 2) * 100
                         break
                 if labelslist == []:
                     return render_template('error.html', mode="2")
+                print("Labels: ")
                 api_url = 'https://api.api-ninjas.com/v1/animals?name={}'.format(str(labelslist[0]).lower())
                 response = requests.get(api_url, headers={'X-Api-Key': 'ig9ASDgHx/G7qjaEMjc20w==IKOpR2YWR7NvUA1w'})
-                randAnimal = random.randint(0, len(response.json())-1)
+                print("Labels: ")
+
                 # Render the results page
                 if response.status_code == requests.codes.ok:
+                    randAnimal = random.randint(0, len(response.json())-1)
+                    print("Labels: ")
                     animal_data = wiki(str(response.json()[randAnimal]['name']).lower())
-                    if len(animal_data.split()) < 100 and len(animal_data.split()) > 0:
-                        # Generate more information using GPT-3
-                        animal_data = generate_information(animal_data)
-                    else:
-                        animal_data = animal_data
                     if (str(response.json()[randAnimal]['name']).lower() != str(labelslist[0]).lower()):
                         genus_data = wiki(labelslist[0].lower())
                     else:
-                        if page_exists(str(response.json()[randAnimal]['taxonomy']['genus']).lower()):
+                        if str(response.json()[randAnimal]['taxonomy']['genus']) and page_exists(str(response.json()[randAnimal]['taxonomy']['genus']).lower()):
                             genus_data = wiki(str(response.json()[randAnimal]['taxonomy']['genus']).lower())
                         else:
                             genus_data = ""
-                    if len(genus_data.split()) < 100 and len(genus_data.split()) > 0:
-                        # Generate more information using GPT-3
-                        genus_data = generate_information(genus_data)
-                    else:
-                        genus_data = genus_data
+                    print("Labels: ")
                     if page_exists(response.json()[randAnimal]['name'].lower()):
                         wiki_url = "https://en.wikipedia.org/wiki/{}".format(response.json()[randAnimal]['name'].lower())
                     else:
                         wiki_url = "https://en.wikipedia.org/wiki/{}".format(labelslist[0].lower())
+                    print("Labels: ")
                     try:
                         similar_species = get_similar_species(response.json()[randAnimal]['taxonomy']['scientific_name'])
                     except Exception as e:
                         return render_template('error.html', mode="1")
+                    print("Labels: ")
                     return render_template('results.html', mode = "1", wiki_url = wiki_url, labels=response.json()[randAnimal], uploaded_images=request.files['image'], animal_data=animal_data, genus_data=genus_data, similar_species=similar_species, score=score)
                 else:
                     print("Error:", response.status_code, response.text)
@@ -125,25 +121,16 @@ def process_image():
                                     labelslist.append(uploaded_text)
                                     print("Found")
                                     animal_data = wiki(str(eachAnimal['name']).lower())
-                                    if len(animal_data.split()) < 100 and len(animal_data.split()) > 0:
-                                        # Generate more information using GPT-3
-                                        animal_data = generate_information(animal_data)
-                                    else:
-                                        animal_data = animal_data
+                                    print("Found")
                                     if (str(eachAnimal['name']).lower() != str(labelslist[0]).lower()):
                                         print("Found")
                                         genus_data = wiki(labelslist[0].lower())
                                         print("Found")
                                     else:
-                                        if page_exists(str(response.json()[randAnimal]['taxonomy']['genus']).lower()):
+                                        if str(response.json()[randAnimal]['taxonomy']['genus']) and page_exists(str(response.json()[randAnimal]['taxonomy']['genus']).lower()):
                                             genus_data = wiki(str(response.json()[randAnimal]['taxonomy']['genus']).lower())
                                         else:
                                             genus_data = ""
-                                        if len(genus_data.split()) < 100 and len(genus_data.split()) > 0:
-                                            # Generate more information using GPT-3
-                                            genus_data = generate_information(genus_data)
-                                        else:
-                                            genus_data = genus_data
                                     if page_exists(eachAnimal['name'].lower()):
                                         wiki_url = "https://en.wikipedia.org/wiki/{}".format(eachAnimal['name'].lower())
                                     else:
@@ -154,28 +141,18 @@ def process_image():
                         labelslist.append(response.json()[0]['name'])
                         api_url = 'https://api.api-ninjas.com/v1/animals?name={}'.format(str(labelslist[0]).lower())
                         response = requests.get(api_url, headers={'X-Api-Key': 'ig9ASDgHx/G7qjaEMjc20w==IKOpR2YWR7NvUA1w'})
-                        randAnimal = random.randint(0, len(response.json())-1)
 
                         # Render the results page
                         if response.status_code == requests.codes.ok:
+                            randAnimal = random.randint(0, len(response.json())-1)
                             animal_data = wiki(str(response.json()[randAnimal]['name']).lower())
-                            if len(animal_data.split()) < 100 and len(animal_data.split()) > 0:
-                                # Generate more information using GPT-3
-                                animal_data = generate_information(animal_data)
-                            else:
-                                animal_data = animal_data
                             if (str(response.json()[randAnimal]['name']).lower() != str(labelslist[0]).lower()):
                                 genus_data = wiki(labelslist[0].lower())
                             else:
-                                if page_exists(str(response.json()[randAnimal]['taxonomy']['genus']).lower()):
+                                if str(response.json()[randAnimal]['taxonomy']['genus']) and page_exists(str(response.json()[randAnimal]['taxonomy']['genus']).lower()):
                                     genus_data = wiki(str(response.json()[randAnimal]['taxonomy']['genus']).lower())
                                 else:
                                     genus_data = ""
-                                if len(genus_data.split()) < 100 and len(genus_data.split()) > 0:
-                                    # Generate more information using GPT-3
-                                    genus_data = generate_information(genus_data)
-                                else:
-                                    genus_data = genus_data
                             if page_exists(eachAnimal['name'].lower()):
                                 wiki_url = "https://en.wikipedia.org/wiki/{}".format(eachAnimal['name'].lower())
                             else:
@@ -192,7 +169,6 @@ def process_image():
                     response = requests.get(api_url, headers={'X-Api-Key': 'ig9ASDgHx/G7qjaEMjc20w==IKOpR2YWR7NvUA1w'})
                     randAnimal = random.randint(0, len(response.json())-1)
 
-                    print(response.json()[randAnimal]['name'])
                     print("Processing text...")
                     # Render the results page
                     if not(str(response.json()[randAnimal]['name'])):
@@ -200,29 +176,19 @@ def process_image():
 
                     if response.status_code == requests.codes.ok:
                         animal_data = wiki(str(response.json()[randAnimal]['name']).lower())
-                        if len(animal_data.split()) < 100 and len(animal_data.split()) > 0:
-                            # Generate more information using GPT-3
-                            animal_data = generate_information(animal_data)
-                        else:
-                            animal_data = animal_data
                         if (str(response.json()[randAnimal]['name']).lower() != str(labelslist[0]).lower()):
                             genus_data = wiki(labelslist[0].lower())
                         else:
-                            if page_exists(str(response.json()[randAnimal]['taxonomy']['genus']).lower()):
+                            if str(response.json()[randAnimal]['taxonomy']['genus']) and page_exists(str(response.json()[randAnimal]['taxonomy']['genus']).lower()):
                                 genus_data = wiki(str(response.json()[randAnimal]['taxonomy']['genus']).lower())
                             else:
                                 genus_data = ""
-                            if len(genus_data.split()) < 100 and len(genus_data.split()) > 0:
-                                # Generate more information using GPT-3
-                                genus_data = generate_information(genus_data)
-                            else:
-                                genus_data = genus_data
                         print("Processing text...")
                         if page_exists(str(response.json()[randAnimal]['name']).lower()):
                             wiki_url = "https://en.wikipedia.org/wiki/{}".format(str(response.json()[randAnimal]['name']).lower())
                         else:
                             wiki_url = "https://en.wikipedia.org/wiki/{}".format(uploaded_text.lower())
-                        wiki_url = "https://en.wikipedia.org/wiki/{}".format(str(response.json()[randAnimal]['name']).lower())
+                        #wiki_url = "https://en.wikipedia.org/wiki/{}".format(str(response.json()[randAnimal]['name']).lower())
                         similar_species = get_similar_species(response.json()[randAnimal]['taxonomy']['scientific_name'])
                         return render_template('results.html', mode = "2", wiki_url = wiki_url, labels=response.json()[randAnimal], uploaded_images="", uploaded_text=uploaded_text, animal_data=animal_data, genus_data=genus_data, similar_species=similar_species)
                     else:
@@ -238,37 +204,36 @@ def process_image():
 @app.route('/random_result', methods=['POST', 'GET'])
 @app.route('/random_animal', methods=['POST', 'GET'])
 def random_animal():
-    text = generate_random_animal()
-    api_url = 'https://api.api-ninjas.com/v1/animals?name={}'.format(text.lower())
-    response = requests.get(api_url, headers={'X-Api-Key': 'ig9ASDgHx/G7qjaEMjc20w==IKOpR2YWR7NvUA1w'})
-    randAnimal = random.randint(0, len(response.json())-1)
-    # Render the results page
-    if response.status_code == requests.codes.ok:
-        animal_data = wiki(str(response.json()[randAnimal]['name']).lower())
-        if len(animal_data.split()) < 100 and len(animal_data.split()) > 0:
-            # Generate more information using GPT-3
-            animal_data = generate_information(animal_data)
-        else:
-            animal_data = animal_data
-        if (str(response.json()[randAnimal]['name']).lower() != str(text).lower()):
-            genus_data = wiki(text.lower())
-        else:
-            if page_exists(str(response.json()[randAnimal]['taxonomy']['genus']).lower()):
-                genus_data = wiki(str(response.json()[randAnimal]['taxonomy']['genus']).lower())
+    try:
+        text = generate_random_animal()
+        api_url = 'https://api.api-ninjas.com/v1/animals?name={}'.format(text.lower())
+        response = requests.get(api_url, headers={'X-Api-Key': 'ig9ASDgHx/G7qjaEMjc20w==IKOpR2YWR7NvUA1w'})
+        # Render the results page
+        if response.status_code == requests.codes.ok:
+            randAnimal = random.randint(0, len(response.json())-1)
+            print(response.json()[randAnimal])
+            animal_data = wiki(str(response.json()[randAnimal]['name']).lower())
+            if (str(response.json()[randAnimal]['name']).lower() != str(text).lower()):
+                genus_data = wiki(text.lower())
             else:
-                genus_data = ""
-        if len(genus_data.split()) < 100 and len(genus_data.split()) > 0:
-            # Generate more information using GPT-3
-            genus_data = generate_information(genus_data)
+                if str(response.json()[randAnimal]['taxonomy']['genus']) and page_exists(str(response.json()[randAnimal]['taxonomy']['genus']).lower()):
+                    genus_data = wiki(str(response.json()[randAnimal]['taxonomy']['genus']).lower())
+                else:
+                    genus_data = ""
+            if page_exists(response.json()[randAnimal]['name'].lower()):
+                wiki_url = "https://en.wikipedia.org/wiki/{}".format(response.json()[randAnimal]['name'].lower())
+            else:
+                wiki_url = "https://en.wikipedia.org/wiki/{}".format(text.lower())
+            if response.json()[randAnimal]['taxonomy']['scientific_name']:
+                similar_species = get_similar_species(response.json()[randAnimal]['taxonomy']['scientific_name'])
+            else:
+                similar_species = get_similar_species(response.json()[randAnimal]['name'])
+            return render_template('results.html', mode = "2", wiki_url = wiki_url, labels=response.json()[randAnimal], uploaded_images="", uploaded_text=text, animal_data=animal_data, genus_data=genus_data, similar_species=similar_species)
         else:
-            genus_data = genus_data
-        if page_exists(response.json()[randAnimal]['name'].lower()):
-            wiki_url = "https://en.wikipedia.org/wiki/{}".format(response.json()[randAnimal]['name'].lower())
-        else:
-            wiki_url = "https://en.wikipedia.org/wiki/{}".format(text.lower())
-        similar_species = get_similar_species(response.json()[randAnimal]['taxonomy']['scientific_name'])
-        return render_template('results.html', mode = "2", wiki_url = wiki_url, labels=response.json()[randAnimal], uploaded_images="", uploaded_text=text, animal_data=animal_data, genus_data=genus_data, similar_species=similar_species)
-
+            print("Error:", response.status_code, response.text)
+            return render_template('error.html', mode="1")
+    except Exception as e:
+        return render_template('error.html', mode="1")
 
 # Define Functions From Here
 def wiki(query):
@@ -336,20 +301,18 @@ def generate_random_animal():
     animal_keywords = ["Fox", "Ox", "Aardvark", "Albatross", "Alligator", "Alpaca", "Ant", "Anteater", "Antelope", "Ape", "Armadillo", "Donkey", "Baboon", "Badger", "Barracuda", "Bat", "Bear", "Beaver", "Bee", "Bison", "Boar", "Buffalo", "Butterfly", "Camel", "Capybara", "Caribou", "Cassowary", "Cat", "Caterpillar", "Cattle", "Chamois", "Cheetah", "Chicken", "Chimpanzee", "Chinchilla", "Chough", "Clam", "Cobra", "Cockroach", "Cod", "Cormorant", "Cow", "Coyote", "Crab", "Crane", "Crocodile", "Crow", "Curlew", "Deer", "Dinosaur", "Dog", "Dogfish", "Dolphin", "Dotterel", "Dove", "Dragonfly", "Duck", "Dugong", "Dunlin", "Eagle", "Echidna", "Eel", "Eland", "Elephant", "Elk", "Emu", "Falcon", "Ferret", "Finch", "Fish", "Flamingo", "Fly", "Fox", "Frog", "Gaur", "Gazelle", "Gerbil", "Giraffe", "Gnat", "Gnu", "Goat", "Goldfinch", "Goldfish", "Goose", "Gorilla", "Goshawk", "Grasshopper", "Grouse", "Guanaco", "Gull", "Hamster", "Hare", "Hawk", "Hedgehog", "Heron", "Herring", "Hippopotamus", "Hornet", "Horse", "Human", "Hummingbird", "Hyena", "Ibex", "Ibis", "Jackal", "Jaguar", "Jay", "Jellyfish", "Kangaroo", "Kingfisher", "Koala", "Kookabura", "Kouprey", "Kudu", "Lapwing", "Lark", "Lemur", "Leopard", "Lion", "Llama", "Lobster", "Locust", "Loris", "Louse", "Lyrebird", "Magpie", "Mallard", "Manatee", "Mandrill", "Mantis", "Marten", "Meerkat", "Mink", "Mole", "Mongoose", "Monkey", "Moose", "Mosquito", "Mouse", "Mule", "Narwhal", "Newt", "Nightingale", "Octopus", "Okapi", "Opossum", "Oryx", "Ostrich", "Otter", "Owl", "Oyster", "Panther", "Parrot", "Partridge", "Peafowl", "Pelican", "Penguin", "Pheasant", "Pig", "Pigeon", "Pony", "Porcupine", "Porpoise", "Quail", "Quelea", "Quetzal", "Rabbit", "Raccoon", "Rail", "Ram", "Rat", "Raven", "Red deer", "Red panda", "Reindeer", "Rhinoceros", "Rook", "Salamander", "Salmon", "Sand Dollar", "Sandpiper", "Sardine", "Scorpion", "Seahorse", "Seal", "Shark", "Sheep", "Shrew", "Skunk", "Snail", "Snake", "Sparrow", "Spider", "Spoonbill", "Squid", "Squirrel", "Starling", "Stingray", "Stinkbug", "Stork", "Swallow", "Swan", "Tapir", "Tarsier", "Termite", "Tiger", "Toad", "Trout", "Turkey", "Turtle", "Viper", "Vulture", "Wallaby", "Walrus", "Wasp", "Weasel", "Whale", "Wildcat", "Wolf", "Wolverine", "Wombat", "Woodcock", "Woodpecker", "Worm", "Wren", "Yak", "Zebra", "Aardwolf", "Bactrian Camel", "Beluga Whale", "Chimpanzee", "Dik-dik", "Echidna", "Fennec Fox", "Gila Monster", "Hamadryas Baboon", "Iguana", "Jerboa", "Kakapo", "Lemming", "Manatee", "Narwhal", "Ocelot", "Pangolin", "Quokka", "Red Fox", "Stoat", "Tasmanian Devil", "Uakari", "Vaquita", "Wombat", "X-ray Tetra", "Yellow Tang", "Zorse"]    
     return animal_keywords[random.randint(0, len(animal_keywords)-1)]
     
-def generate_information(input_text):
-    prompt_text = "Please rewrite or write more on the following in about 400 words:\n"
-    prompt_text += input_text
-    try:
-        response = openai.Completion.create(
-            engine="text-davinci-002",  # You can choose the appropriate GPT-3 engine
-            prompt=input_text,
-            max_tokens=500  # Adjust the max tokens as needed
-        )
-        generated_text = response.choices[0].text
-        return generated_text
-    except Exception as e:
-        print("Error generating information:", str(e))
-        return ""
+# def generate_information(input_text):
+#     try:
+#         response = openai.Completion.create(
+#             engine="text-davinci-002",  # You can choose the appropriate GPT-3 engine
+#             prompt=input_text,
+#             max_tokens=100  # Adjust the max tokens as needed
+#         )
+#         generated_text = response.choices[0].text
+#         return generated_text
+#     except Exception as e:
+#         print("Error generating information:", str(e))
+#         return ""
 
 if __name__ == '__main__':
     app.run(debug=True)

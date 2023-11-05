@@ -17,7 +17,7 @@ Date: 11/4/2023
         <div class="wrapper">
             <h1 id="header"><span id="black-letter">F</span>auna<span id="black-letter">F</span>inder</h1>
             <p class="title">AI-Powered Animal Breed Recognition </p> <br> <br> 
-            <p class="info">Explore the oppportunity to either learn about a new animal or search for an animal</p>
+            <p class="info">Explore the oppportunity to learn about a new animal by searching/uploading an animal species!<br><br>More Specific Prompt = More Accurate Output</p>
             <form action="/result" method="post" enctype="multipart/form-data">
                 <div id="form-container">
                     <label for="file-upload" id="image-label" class="btn">Upload Image</label>
@@ -26,7 +26,7 @@ Date: 11/4/2023
                     <img src="" id="uploaded-image" alt="Uploaded Image">
                     <input type="text" id="text-input" name="animal" placeholder="Enter A Name Of An Animal">
                     <input type="submit" value="Process Image" id="submit-button" class="btn" onclick="submitForm()"> 
-                    <input type="button" id="random-animal-button" value="Search Random Animal" class="btn" onclick='changePage("/random")'>
+                    <input type="button" id="random-animal-button" value="Learn About A Random Animal" class="btn" onclick='changePage("/random")'>
                 </div>
             </form>
         </div>
@@ -93,6 +93,7 @@ Date: 11/4/2023
             submitButton.style.display = 'block';
             if (fileUpload.files.length > 0) {
                 submitButton.value = "Process Image"
+                textInput.value = "";
                 const fileName = fileUpload.files[0].name;
                 fileNameDisplay.innerHTML = `<span class="cancel-button" onclick="cancelFileUpload()">X</span> File Name: ${fileName}`;
             } else {
