@@ -22,6 +22,7 @@ app = Flask(__name__)
 
 @app.route('/')
 @app.route('/index')
+@app.route('/home')
 def index():
     return render_template('index.html')
 
@@ -52,6 +53,7 @@ def process_image():
                 for words in str(uploaded_text):
                     if is_animal(words):
                         labelslist.append(words)
+                        print ("Labels List: ", labelslist)
 
                 check = 'https://api.api-ninjas.com/v1/animals?name={}'.format(uploaded_text.lower())
                 response = requests.get(check, headers={'X-Api-Key': 'VCnLMT7zPuqknbt4dhzBNg==5OpxwAMhaChuyvfH'})
