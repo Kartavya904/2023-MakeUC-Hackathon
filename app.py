@@ -29,6 +29,8 @@ def index():
 @app.route('/process_image', methods=['POST', 'GET'])
 @app.route('/process_text', methods=['POST', 'GET'])
 @app.route('/result', methods=['POST', 'GET'])
+
+# Function to process the image
 def process_image():
         labelslist = []
         # You either get a text or a picture
@@ -90,8 +92,10 @@ def process_image():
                         labelslist.append(words)
                         print ("Labels List: ", labelslist)
 
+                # Checking if the text is an animal using the Animals API
                 check = 'https://api.api-ninjas.com/v1/animals?name={}'.format(uploaded_text.lower())
                 response = requests.get(check, headers={'X-Api-Key': 'ig9ASDgHx/G7qjaEMjc20w==IKOpR2YWR7NvUA1w'})
+
                 if labelslist == []:
                     if response.json() == []:
                         return render_template('error.html', mode="3")
