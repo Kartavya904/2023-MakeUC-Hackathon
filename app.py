@@ -65,7 +65,10 @@ def process_image():
                     if (str(response.json()[randAnimal]['name']).lower() != str(labelslist[0]).lower()):
                         genus_data = wiki(labelslist[0].lower())
                     else:
-                        genus_data = wiki(str(response.json()[randAnimal]['taxonomy']['genus']).lower())
+                        if page_exists(str(response.json()[randAnimal]['taxonomy']['genus']).lower()):
+                            genus_data = wiki(str(response.json()[randAnimal]['taxonomy']['genus']).lower())
+                        else:
+                            genus_data = ""
                     if page_exists(response.json()[randAnimal]['name'].lower()):
                         wiki_url = "https://en.wikipedia.org/wiki/{}".format(response.json()[randAnimal]['name'].lower())
                     else:
@@ -86,7 +89,7 @@ def process_image():
             try:
                 uploaded_text = request.form['animal']
 
-                for words in str(uploaded_text):
+                for words in str(uploaded_text).split():
                     print("Words: ", words)
                     if is_animal(words):
                         labelslist.append(words)
@@ -115,8 +118,10 @@ def process_image():
                                         genus_data = wiki(labelslist[0].lower())
                                         print("Found")
                                     else:
-                                        genus_data = wiki(str(response.json()[randAnimal]['taxonomy']['genus']).lower())
-                                        print("Found")
+                                        if page_exists(str(response.json()[randAnimal]['taxonomy']['genus']).lower()):
+                                            genus_data = wiki(str(response.json()[randAnimal]['taxonomy']['genus']).lower())
+                                        else:
+                                            genus_data = ""
                                     if page_exists(eachAnimal['name'].lower()):
                                         wiki_url = "https://en.wikipedia.org/wiki/{}".format(eachAnimal['name'].lower())
                                     else:
@@ -135,7 +140,10 @@ def process_image():
                             if (str(response.json()[randAnimal]['name']).lower() != str(labelslist[0]).lower()):
                                 genus_data = wiki(labelslist[0].lower())
                             else:
-                                genus_data = wiki(str(response.json()[randAnimal]['taxonomy']['genus']).lower())
+                                if page_exists(str(response.json()[randAnimal]['taxonomy']['genus']).lower()):
+                                    genus_data = wiki(str(response.json()[randAnimal]['taxonomy']['genus']).lower())
+                                else:
+                                    genus_data = ""
                             if page_exists(eachAnimal['name'].lower()):
                                 wiki_url = "https://en.wikipedia.org/wiki/{}".format(eachAnimal['name'].lower())
                             else:
@@ -155,12 +163,18 @@ def process_image():
                     print(response.json()[randAnimal]['name'])
                     print("Processing text...")
                     # Render the results page
+                    if not(str(response.json()[randAnimal]['name'])):
+                        return render_template('error.html', mode="3")
+
                     if response.status_code == requests.codes.ok:
                         animal_data = wiki(str(response.json()[randAnimal]['name']).lower())
                         if (str(response.json()[randAnimal]['name']).lower() != str(labelslist[0]).lower()):
                             genus_data = wiki(labelslist[0].lower())
                         else:
-                            genus_data = wiki(str(response.json()[randAnimal]['taxonomy']['genus']).lower())
+                            if page_exists(str(response.json()[randAnimal]['taxonomy']['genus']).lower()):
+                                genus_data = wiki(str(response.json()[randAnimal]['taxonomy']['genus']).lower())
+                            else:
+                                genus_data = ""
                         print("Processing text...")
                         if page_exists(str(response.json()[randAnimal]['name']).lower()):
                             wiki_url = "https://en.wikipedia.org/wiki/{}".format(str(response.json()[randAnimal]['name']).lower())
@@ -177,27 +191,6 @@ def process_image():
                 return render_template('error.html', mode="1")
         else:
             return render_template('error.html', mode="1")
-
-@app.route('/random', methods=['POST', 'GET'])
-def random_animal():
-    text = generate_random_animal()
-    api_url = 'https://api.api-ninjas.com/v1/animals?name={}'.format(text.lower())
-    response = requests.get(api_url, headers={'X-Api-Key': 'ig9ASDgHx/G7qjaEMjc20w==IKOpR2YWR7NvUA1w'})
-    randAnimal = random.randint(0, len(response.json())-1)
-    # Render the results page
-    if response.status_code == requests.codes.ok:
-        animal_data = wiki(str(response.json()[randAnimal]['name']).lower())
-        if (str(response.json()[randAnimal]['name']).lower() != str(text).lower()):
-            genus_data = wiki(text.lower())
-        else:
-            genus_data = wiki(str(response.json()[randAnimal]['taxonomy']['genus']).lower())
-        if page_exists(response.json()[randAnimal]['name'].lower()):
-            wiki_url = "https://en.wikipedia.org/wiki/{}".format(response.json()[randAnimal]['name'].lower())
-        else:
-            wiki_url = "https://en.wikipedia.org/wiki/{}".format(text.lower())
-        similar_species = get_similar_species(response.json()[randAnimal]['taxonomy']['scientific_name'])
-        return render_template('results.html', mode = "2", wiki_url = wiki_url, labels=response.json()[randAnimal], uploaded_images="", uploaded_text=text, animal_data=animal_data, genus_data=genus_data, similar_species=similar_species)
-    
 
 # Define Functions From Here
 def wiki(query):
@@ -220,10 +213,6 @@ def is_animal(label):
         if keyword.lower() == label.lower():
             return True
     return False 
-
-def generate_random_animal():
-    animal_keywords = ["Fox", "Ox", "Aardvark", "Albatross", "Alligator", "Alpaca", "Ant", "Anteater", "Antelope", "Ape", "Armadillo", "Donkey", "Baboon", "Badger", "Barracuda", "Bat", "Bear", "Beaver", "Bee", "Bison", "Boar", "Buffalo", "Butterfly", "Camel", "Capybara", "Caribou", "Cassowary", "Cat", "Caterpillar", "Cattle", "Chamois", "Cheetah", "Chicken", "Chimpanzee", "Chinchilla", "Chough", "Clam", "Cobra", "Cockroach", "Cod", "Cormorant", "Cow", "Coyote", "Crab", "Crane", "Crocodile", "Crow", "Curlew", "Deer", "Dinosaur", "Dog", "Dogfish", "Dolphin", "Dotterel", "Dove", "Dragonfly", "Duck", "Dugong", "Dunlin", "Eagle", "Echidna", "Eel", "Eland", "Elephant", "Elk", "Emu", "Falcon", "Ferret", "Finch", "Fish", "Flamingo", "Fly", "Fox", "Frog", "Gaur", "Gazelle", "Gerbil", "Giraffe", "Gnat", "Gnu", "Goat", "Goldfinch", "Goldfish", "Goose", "Gorilla", "Goshawk", "Grasshopper", "Grouse", "Guanaco", "Gull", "Hamster", "Hare", "Hawk", "Hedgehog", "Heron", "Herring", "Hippopotamus", "Hornet", "Horse", "Human", "Hummingbird", "Hyena", "Ibex", "Ibis", "Jackal", "Jaguar", "Jay", "Jellyfish", "Kangaroo", "Kingfisher", "Koala", "Kookabura", "Kouprey", "Kudu", "Lapwing", "Lark", "Lemur", "Leopard", "Lion", "Llama", "Lobster", "Locust", "Loris", "Louse", "Lyrebird", "Magpie", "Mallard", "Manatee", "Mandrill", "Mantis", "Marten", "Meerkat", "Mink", "Mole", "Mongoose", "Monkey", "Moose", "Mosquito", "Mouse", "Mule", "Narwhal", "Newt", "Nightingale", "Octopus", "Okapi", "Opossum", "Oryx", "Ostrich", "Otter", "Owl", "Oyster", "Panther", "Parrot", "Partridge", "Peafowl", "Pelican", "Penguin", "Pheasant", "Pig", "Pigeon", "Pony", "Porcupine", "Porpoise", "Quail", "Quelea", "Quetzal", "Rabbit", "Raccoon", "Rail", "Ram", "Rat", "Raven", "Red deer", "Red panda", "Reindeer", "Rhinoceros", "Rook", "Salamander", "Salmon", "Sand Dollar", "Sandpiper", "Sardine", "Scorpion", "Seahorse", "Seal", "Shark", "Sheep", "Shrew", "Skunk", "Snail", "Snake", "Sparrow", "Spider", "Spoonbill", "Squid", "Squirrel", "Starling", "Stingray", "Stinkbug", "Stork", "Swallow", "Swan", "Tapir", "Tarsier", "Termite", "Tiger", "Toad", "Trout", "Turkey", "Turtle", "Viper", "Vulture", "Wallaby", "Walrus", "Wasp", "Weasel", "Whale", "Wildcat", "Wolf", "Wolverine", "Wombat", "Woodcock", "Woodpecker", "Worm", "Wren", "Yak", "Zebra", "Aardwolf", "Bactrian Camel", "Beluga Whale", "Chimpanzee", "Dik-dik", "Echidna", "Fennec Fox", "Gila Monster", "Hamadryas Baboon", "Iguana", "Jerboa", "Kakapo", "Lemming", "Manatee", "Narwhal", "Ocelot", "Pangolin", "Quokka", "Red Fox", "Stoat", "Tasmanian Devil", "Uakari", "Vaquita", "Wombat", "X-ray Tetra", "Yellow Tang", "Zorse"]    
-    return animal_keywords[random.randint(0, len(animal_keywords)-1)]
 
 def wiki_species(query):
     wiki_wiki = wikipediaapi.Wikipedia(user_agent="MakeUCHackathon")  # You can change the language code if needed.
