@@ -45,7 +45,14 @@ body {
     max-height: auto;
     color: #0e0e0e; /* Change the color to your preference */
     font-family: Arial, sans-serif; /* Change the font-family if needed */
-    margin-bottom: 50px; /* Adjust the spacing as desired */
+    /* margin-bottom: 50px; Adjust the spacing as desired */
+}
+
+.info {
+    text-align: center;
+    color: #0e0e0e;
+    font-size: 13px; /* You can adjust the font size as needed */
+    margin-bottom: 50px; /*Adjust the spacing as desired */
 }
 
 .home-button {
