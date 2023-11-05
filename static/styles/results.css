@@ -141,3 +141,8 @@ ul {
     color: #16e0ff;
 }
 
+.score {
+    font-size: 16px; /* Adjust the font size as needed */
+    color: white; /* You can choose a color that suits your design */
+    margin-left: 5px; /* Add some spacing between the name and the score */
+}

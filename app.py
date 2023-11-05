@@ -36,7 +36,7 @@ def process_image():
         # You either get a text or a picture
         # Check for what you got!
         if request.files['image']:
-            try:
+            # try:
                 uploaded_image = request.files['image']
 
                 # Authenticate with Google Cloud Vision using your API key
@@ -48,19 +48,26 @@ def process_image():
                 # Perform image analysis using Google Cloud Vision API
                 image = Image(content=content)
                 response = client.label_detection(image=image) # Taking most time to process
-
+                score = 0
                 # Collect all detected labels
+                print("Labels: ")
                 for label in response.label_annotations:
                     if is_animal(label.description):
-                        labelslist.append(label.description)  
+                        print("Labels: ")
+                        labelslist.append(label.description) 
+                        score = round(label.score, 2) * 100
+                        break
                 if labelslist == []:
                     return render_template('error.html', mode="2")
+                print("Labels: ")
                 api_url = 'https://api.api-ninjas.com/v1/animals?name={}'.format(str(labelslist[0]).lower())
                 response = requests.get(api_url, headers={'X-Api-Key': 'ig9ASDgHx/G7qjaEMjc20w==IKOpR2YWR7NvUA1w'})
                 randAnimal = random.randint(0, len(response.json())-1)
+                print("Labels: ")
 
                 # Render the results page
                 if response.status_code == requests.codes.ok:
+                    print("Labels: ")
                     animal_data = wiki(str(response.json()[randAnimal]['name']).lower())
                     if (str(response.json()[randAnimal]['name']).lower() != str(labelslist[0]).lower()):
                         genus_data = wiki(labelslist[0].lower())
@@ -69,20 +76,23 @@ def process_image():
                             genus_data = wiki(str(response.json()[randAnimal]['taxonomy']['genus']).lower())
                         else:
                             genus_data = ""
+                    print("Labels: ")
                     if page_exists(response.json()[randAnimal]['name'].lower()):
                         wiki_url = "https://en.wikipedia.org/wiki/{}".format(response.json()[randAnimal]['name'].lower())
                     else:
-                        wiki_url = "https://en.wikipedia.org/wiki/{}".format(uploaded_text.lower())
+                        wiki_url = "https://en.wikipedia.org/wiki/{}".format(labelslist[0].lower())
+                    print("Labels: ")
                     try:
                         similar_species = get_similar_species(response.json()[randAnimal]['taxonomy']['scientific_name'])
                     except Exception as e:
                         return render_template('error.html', mode="1")
-                    return render_template('results.html', mode = "1", wiki_url = wiki_url, labels=response.json()[randAnimal], uploaded_images=request.files['image'], animal_data=animal_data, genus_data=genus_data, similar_species=similar_species)
+                    print("Labels: ")
+                    return render_template('results.html', mode = "1", wiki_url = wiki_url, labels=response.json()[randAnimal], uploaded_images=request.files['image'], animal_data=animal_data, genus_data=genus_data, similar_species=similar_species, score=score)
                 else:
                     print("Error:", response.status_code, response.text)
                     return render_template('error.html', mode="1")
-            except Exception as e:
-                return render_template('error.html', mode="1")
+            # except Exception as e:
+            #     return render_template('error.html', mode="1")
             
         # If Text is uploaded
         elif request.form['animal']:

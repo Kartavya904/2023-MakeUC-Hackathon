@@ -11,7 +11,8 @@
     <body>
         <div class="top">
             <a id="header" href="/index"><span id="black-letter">F</span>auna<span id="black-letter">F</span>inder</a><br>
-            <a class="name" href = "{{ wiki_url }}" target="_blank"><strong>{{ labels.name }}</strong></a>
+            <a class="name" href="{{ wiki_url }}" target="_blank"><strong>{{ labels.name }}</strong></a>{% if mode == "1" %}<span class="score">({{ score }}% Accurate)</span>{% endif %}
+
         </div>
         <div class="container">
             <div class="left-section">
