@@ -3,37 +3,35 @@ Frontend for the Web Application
 Made by Shivam Kharangate & Kartavya Singh
 Date: 11/4/2023 
 -->
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/index.css') }}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FaunaFinder: AI Animal and Dog Breed Detector</title>
-</head>
-<body>
-    <h1 id="header"><span id="black-letter">F</span>auna<span id="black-letter">F</span>inder</h1>
-    <p class="title"> <br>AI Animal and Dog Breed Detector</p>
-    
-    <form action="/process_image" method="post" enctype="multipart/form-data">
-        <div id="form-container">
-            <label for="file-upload" id="image-label" class="btn">Upload Image</label>
-            <input type="file" id="file-upload" accept="image/*" name="image">
-            <div id="file-name"></div><br><br>
-            <img src="" id="uploaded-image" alt="Uploaded Image">
-            <input type="text" name="animal" id="text-input" placeholder="Enter text">
-            <input type="submit" value="Process Image" id="submit-button" class="btn" onclick="submitForm()"> 
+    <head>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/index.css') }}">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>FaunaFinder</title>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h1 id="header"><span id="black-letter">F</span>auna<span id="black-letter">F</span>inder</h1>
+            <p class="title">AI-Powered Animal Breed Recognition</p>
+            <form action="/result" method="post" enctype="multipart/form-data">
+                <div id="form-container">
+                    <label for="file-upload" id="image-label" class="btn">Upload Image</label>
+                    <input type="file" id="file-upload" accept="image/*" name="image">
+                    <div id="file-name"></div>
+                    <img src="" id="uploaded-image" alt="Uploaded Image">
+                    <input type="text" id="text-input" name="animal" placeholder="Enter A Name Of An Animal">
+                    <input type="submit" value="Process Image" id="submit-button" class="btn" onclick="submitForm()"> 
+                </div>
+            </form>
         </div>
-    </form>
-<!--     
-    <form action="/process_image" method="post" enctype="multipart/form-data">
-        <input type="file" name="image">
-        <input type="submit" value="Process Image">
-    </form> -->
-</body>
+    </body>
 </html>
 
-<script>
+<!-- index.js giving errors -->
+<script type="text/javascript">
     const fileUpload = document.getElementById('file-upload');
     const textInput = document.getElementById('text-input');
     const submitButton = document.getElementById('submit-button');
@@ -47,6 +45,7 @@ Date: 11/4/2023
             const reader = new FileReader();
             reader.onload = function() {
                 const fileData = reader.result;
+                localStorage.setItem('uploadedImageData', fileData);
                 // Show the uploaded image
                 uploadedImage.src = fileData;
                 uploadedImage.style.display = 'block';
@@ -69,12 +68,14 @@ Date: 11/4/2023
     textInput.addEventListener('input', updateSubmitButton);
 
     function updateSubmitButton() {
-        if (fileUpload.files.length > 0 || textInput.value.trim() !== '') {
+        if (fileUpload.files.length > 0 || (textInput.value.trim() !== '' && textInput.value.length > 2)) {
             submitButton.style.display = 'block';
             if (fileUpload.files.length > 0) {
+                submitButton.value = "Process Image"
                 const fileName = fileUpload.files[0].name;
-                fileNameDisplay.innerHTML = `File Name: ${fileName} <span class="cancel-button" onclick="cancelFileUpload()">X</span>`;
+                fileNameDisplay.innerHTML = `<span class="cancel-button" onclick="cancelFileUpload()">X</span> File Name: ${fileName}`;
             } else {
+                submitButton.value = "Process Text"
                 fileNameDisplay.textContent = '';
             }
         } else {

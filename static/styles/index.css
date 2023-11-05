@@ -1,25 +1,68 @@
-body {
+/* index.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     font-family: Arial, sans-serif;
-    text-align: center;
-    background: url("../images/background.jpg");
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    overflow-y: hidden;
-}
-.title {
-    text-align: center;
-    font-size: 24px;
-    color: #0e0e0e; /* Change the color to your preference */
-    font-family: Arial, sans-serif; /* Change the font-family if needed */
-    margin-top: 10px; /* Adjust the spacing as desired */
-}
-#header {
-    font-size: 48px;
-    margin-top: 50px;
-    color: #0a0a0a;
+
 }
 
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 75vh;
+    background-image: url("../images/background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.wrapper {
+    width:420px !important;
+    background: transparent;
+    color: #000000;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(3px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 10px 20px;
+
+}
+
+#header {
+    font-size: 44px;
+    text-align: center;
+    /* margin-top: 50px; */
+    color: #0a0a0a;
+    font-family: "Times New Roman", Times, serif;
+}
+
+.title {
+    text-align: center;
+    font-size: 22px;
+    max-height: auto;
+    color: #0e0e0e; /* Change the color to your preference */
+    font-family: Arial, sans-serif; /* Change the font-family if needed */
+    margin-bottom: 50px; /* Adjust the spacing as desired */
+}
+
+.home-button {
+    position: fixed;
+    top: 10px; /* Adjust the top position as needed */
+    right: 10px; /* Adjust the right position as needed */
+    background-color: #007bff; /* Background color for the button */
+    color: #fff; /* Text color for the button */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.home-button:hover {
+    background-color: #0056b3;
+}
 
 #file-upload {
     display: none;
@@ -31,15 +74,17 @@ body {
     align-items: center;
     align-content: center;
 }
+
 #black-letter {
     color: #16eeee;
+    font-family: "Times New Roman", Times, serif;
 }
+
 #text-input {
-    width: 20%;
-    border: 0;
+    width: 75%;
     outline: none;
     background: #262626;
-    padding: 15px;
+    padding: 10px;
     margin: 15px 0;
     color: #fff;
     font-size: 18px;
@@ -58,16 +103,22 @@ body {
 #file-name {
     margin-top: 10px;
     font-weight: bold;
+    display: inline-block;
+    white-space: nowrap;
+    max-width: 90%; /* Adjust the max-width to your preference */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Add an ellipsis (...) for long names */
 }
 
 .cancel-button {
     color: #ff0000;
     cursor: pointer;
-    margin-left: 10px;
+    /* margin-left: 10px; */
 }
+
 .btn{
     display: inline-block;
-    margin: 95px auto;
+    margin: auto;
     width: fit-content;
     border: 1px solid #0aaac2;
     padding: 14px 50px;
@@ -77,14 +128,14 @@ body {
     color: #fff;
     transition: background 0.5s;
 }
+
 .btn:hover{
     background: #16e0ff;
 }
-/* Style for displaying the uploaded image */
+
 #uploaded-image {
-    max-width: 500px;
-    align-items: center;
-    align-content: center;
-    margin-top: 20px auto;
-    display: none;
+    max-width: 100%; /* Ensure the image doesn't exceed the width of its container */
+    height: auto; /* Maintain the aspect ratio of the image */
+    display: none; /* Make the image a block element to respect container boundaries */
+    margin: 0 auto; /* Center the image horizontally within the container */
 }

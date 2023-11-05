@@ -33,7 +33,6 @@ def process_image():
         # You either get a text or a picture
         # Check for what you got!
         if request.files['image']:
-            try:
                 uploaded_image = request.files['image']
                 # Authenticate with Google Cloud Vision using your API key
                 client = ImageAnnotatorClient.from_service_account_json('makeuc-hackathon-2023-467a19918a38.json')
@@ -43,8 +42,7 @@ def process_image():
                 image = Image(content=content)
                 response = client.label_detection(image=image) # Taking most time to process
                 return render_template('results.html', mode = "1", wiki_url = "", labels="", uploaded_images=uploaded_image, animal_data="", genus_data="")
-            except Exception as e:
-                return render_template('error.html', mode="1")
+
         
          # If Text is uploaded
         elif request.form['animal']:
@@ -61,6 +59,7 @@ def process_image():
                     if response.json() == []:
                         return render_template('error.html', mode="3")
                     else:
+                        randAnimal = random.randint(0, len(response.json())-1)
                         for eachAnimal in response.json():
                             for eachword in eachAnimal['name'].split():
                                 print(eachword.lower())
@@ -105,8 +104,7 @@ def process_image():
                         else:
                             print("Error:", response.status_code, response.text)
                             return render_template('error.html', mode="3")
-            
-                
+                            
             except Exception as e:
                 return render_template('error.html', mode="1")
         else:
@@ -135,7 +133,7 @@ def is_animal(label):
     return False 
 
 def wiki_species(query):
-    wiki_wiki = wikipediaapi.Wikipedia(user_agent="Kartavya")  # You can change the language code if needed.
+    wiki_wiki = wikipediaapi.Wikipedia(user_agent="MakeUCHackathon")  # You can change the language code if needed.
     page = wiki_wiki.page(query)
     if page.exists():
         print("Page: ", page)
