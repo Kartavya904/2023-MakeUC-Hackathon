@@ -26,10 +26,12 @@ def index():
     return render_template('index.html')
 
 @app.route('/process_image', methods=['POST', 'GET'])
+@app.route('/process_text', methods=['POST', 'GET'])
+@app.route('/result', methods=['POST', 'GET'])
 def process_image():
         labelslist = []
-    # You either get a text or a picture
-    # Check for what you got!
+        # You either get a text or a picture
+        # Check for what you got!
         if request.files['image']:
             try:
                 uploaded_image = request.files['image']
@@ -55,29 +57,28 @@ def process_image():
 
             if labelslist == []:
                 return render_template('error.html')
-    
-            api_url = 'https://api.api-ninjas.com/v1/animals?name={}'.format(uploaded_text)
-            response = requests.get(api_url, headers={'X-Api-Key': 'ig9ASDgHx/G7qjaEMjc20w==IKOpR2YWR7NvUA1w'})
-            randAnimal = random.randint(0, len(response.json())-1)
+        
+            api_url = 'https://api.api-ninjas.com/v1/animals?name={}'.format(str(labelslist[0]).lower())
+            print(api_url)
 
-            print(response.json()[randAnimal]['name'])
+            response = requests.get(api_url, headers={'X-Api-Key': 'ig9ASDgHx/G7qjaEMjc20w==IKOpR2YWR7NvUA1w'})
+            print(response.json()[0]['name'])
             print("Processing text...")
             # Render the results page
             if response.status_code == requests.codes.ok:
-                animal_data = wiki(str(response.json()[randAnimal]['name']).lower())
-                if (str(response.json()[randAnimal]['name']).lower() != str(labelslist[0]).lower()):
+                animal_data = wiki(str(response.json()[0]['name']).lower())
+                if (str(response.json()[0]['name']).lower() != str(labelslist[0]).lower()):
                     genus_data = wiki(labelslist[0].lower())
                 else:
                     genus_data = ""
-                genus = str(response.json()[randAnimal]['taxonomy']['genus']).lower()
-                for section in wiki_species(genus):
-                    print(section.title)
                 print("Processing text...")
-                wiki_url = "https://en.wikipedia.org/wiki/{}".format(str(response.json()[randAnimal]['name']).lower())
-                return render_template('results.html', mode = "2", wiki_url = wiki_url, labels=response.json()[randAnimal], uploaded_images="", animal_data=animal_data, genus_data=genus_data)
+
+                return render_template('results.html', mode = "2", labels=response.json()[0], uploaded_images="", animal_data=animal_data, genus_data=genus_data)
             else:
                 print("Error:", response.status_code, response.text)
                 return render_template('error.html')
+        else:
+            return render_template('error.html')
 
 # Define Functions From Here
 def wiki(query):
